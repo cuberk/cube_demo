@@ -69,10 +69,10 @@ class cube:
         for i in range(0, 7, 3):
             print('         |' + str(board[5][i]) + '|' + str(board[5][i + 1]) + '|' + str(
                 board[5][i + 2]) + '|')
-        print(self.e_place)
-        print(self.e_status)
-        print(self.c_place)
-        print(self.c_status)
+        # print(self.e_place)
+        # print(self.e_status)
+        # print(self.c_place)
+        # print(self.c_status)
 
     # MOVES
     def U(self):
@@ -165,13 +165,66 @@ class cube:
         self.e_status[4], self.e_status[7], self.e_status[6], self.e_status[5] = self.e_status[7], self.e_status[6], self.e_status[5], self.e_status[4]
         self.c_place[4], self.c_place[7], self.c_place[6], self.c_place[5] = self.c_place[7], self.c_place[6], self.c_place[5], self.c_place[4],
         self.c_status[4], self.c_status[7], self.c_status[6], self.c_status[5] = self.c_status[7], self.c_status[6], self.c_status[5], self.c_status[4]
+        
+    def one_move(self, move):
+        if move == 'U':
+            self.U()
+        elif move == 'U2':
+            self.U2()
+        elif move == "U'":
+            self.U3()
+        elif move == 'L':
+            self.L()
+        elif move == 'L2':
+            self.L2()
+        elif move == "L'":
+            self.L3()
+        elif move == 'F':
+            self.F()
+        elif move == 'F2':
+            self.F2()
+        elif move == "F'":
+            self.F3()
+        elif move == 'R':
+            self.R()
+        elif move == 'R2':
+            self.R2()
+        elif move == "R'":
+            self.R3()
+        elif move == 'B':
+            self.B()
+        elif move == 'B2':
+            self.B2()
+        elif move == "B'":
+            self.B3()
+        elif move == 'D':
+            self.D()
+        elif move == 'D2':
+            self.D2()
+        elif move == "D'":
+            self.D3()
+        else:
+            print('wrong input')
+    def get_moves(self, getinput):
+        move = getinput.upper().replace(' ', '')
+        moves = []
+        if len(move) > 1:
+            for i in range(1, len(move)):
+                if move[i] == "2" or move[i] == "'":
+                    moves.append(move[i - 1:i + 1])
+                elif i < len(move) - 1 and move[i - 1] != "'" and move[i - 1] != "2":
+                    moves.append(move[i - 1])
+                elif i == len(move) + 1:
+                    if move[i - 1] != "'" and move[i - 1] != "2":
+                        moves.append(move[i - 1])
+                    moves.append(move[i])
+        return moves
 
 
 test = cube()
-# print(test.status)
-for i in range(6):
-    test.R()
-    test.U()
-    test.R3()
-    test.U3()
+while True:
+    get_input = input('ENTRY MOVE:')
+    moves = test.get_moves(get_input)
+    for single_move in moves:
+        test.one_move(single_move)
     test.show_cube()
