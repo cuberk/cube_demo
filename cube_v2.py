@@ -30,6 +30,10 @@ class cube:
                  |D|D|D|
             的格式打印出来
         '''
+
+        # 根据转态将棱角信息转化到c,e中
+        # e: 0-当前位置的棱块高级色朝向高级面|1-当前位置棱块的高级色朝向低级色
+        # c: 0-角块高级色朝向高级面|1-角块高级色由高级面顺时针转1次|2-角块高级色由高级面顺时针转2次
         e, c = [], []
         for i in range(12):
             if self.e_status[i] == 0:
@@ -46,7 +50,8 @@ class cube:
             if self.c_status[i] == 2:
                 c.append([self.c_standard[self.c_place[i]][1], self.c_standard[self.c_place[i]][2],
                           self.c_standard[self.c_place[i]][0]])
-        board = [
+        # 再将c, e中的信息转化到cube中，cube分别代表魔方的6个面
+        cube = [
             [c[1][0], e[2][0], c[2][0], e[1][0], 'U', e[3][0], c[0][0], e[0][0], c[3][0]],
             [c[1][1], e[1][1], c[0][2], e[9][1], 'L', e[8][1], c[5][2], e[5][1], c[4][1]],
             [c[0][1], e[0][1], c[3][2], e[8][0], 'F', e[11][0], c[4][2], e[4][1], c[7][1]],
@@ -54,21 +59,37 @@ class cube:
             [c[2][1], e[2][1], c[1][2], e[10][0], 'B', e[9][0], c[6][2], e[6][1], c[5][1]],
             [c[4][0], e[4][0], c[7][0], e[5][0], 'D', e[7][0], c[5][0], e[6][0], c[6][0]],
         ]
+        # 添加颜色
+        for face in range(6):
+            for cell in range(9):
+                if cube[face][cell] == 'U':
+                    cube[face][cell] = "\033[1;30;47m" + cube[face][cell] + "\033[0m"
+                elif cube[face][cell] == 'L':
+                    cube[face][cell] = "\033[1;30;45m" + cube[face][cell] + "\033[0m"
+                elif cube[face][cell] == 'F':
+                    cube[face][cell] = "\033[1;30;42m" + cube[face][cell] + "\033[0m"
+                elif cube[face][cell] == 'R':
+                    cube[face][cell] = "\033[1;30;41m" + cube[face][cell] + "\033[0m"
+                elif cube[face][cell] == 'B':
+                    cube[face][cell] = "\033[1;30;44m" + cube[face][cell] + "\033[0m"
+                elif cube[face][cell] == 'D':
+                    cube[face][cell] = "\033[1;30;43m" + cube[face][cell] + "\033[0m"
+        # 打印
         # U
         for i in range(0, 7, 3):
-            print('         |' + str(board[0][i]) + '|' + str(board[0][i + 1]) + '|' + str(
-                board[0][i + 2]) + '|')
+            print('         |' + str(cube[0][i]) + '|' + str(cube[0][i + 1]) + '|' + str(
+                cube[0][i + 2]) + '|')
         # L F R B
         for i in range(0, 7, 3):
             temp = ""
             for face in range(1, 5):
-                temp += ' |' + str(board[face][i]) + '|' + str(board[face][i + 1]) + '|' + str(
-                    board[face][i + 2]) + '|'
+                temp += ' |' + str(cube[face][i]) + '|' + str(cube[face][i + 1]) + '|' + str(
+                    cube[face][i + 2]) + '|'
             print(temp)
         # D
         for i in range(0, 7, 3):
-            print('         |' + str(board[5][i]) + '|' + str(board[5][i + 1]) + '|' + str(
-                board[5][i + 2]) + '|')
+            print('         |' + str(cube[5][i]) + '|' + str(cube[5][i + 1]) + '|' + str(
+                cube[5][i + 2]) + '|')
         # print(self.e_place)
         # print(self.e_status)
         # print(self.c_place)
@@ -203,6 +224,8 @@ class cube:
             self.D2()
         elif move == "D'":
             self.D3()
+        elif move == "Q":
+            self.__init__()
         else:
             print('wrong input')
     def get_moves(self, getinput):
@@ -214,16 +237,18 @@ class cube:
                     moves.append(move[i - 1:i + 1])
                 elif i < len(move) - 1 and move[i - 1] != "'" and move[i - 1] != "2":
                     moves.append(move[i - 1])
-                elif i == len(move) + 1:
+                elif i == len(move) - 1:
                     if move[i - 1] != "'" and move[i - 1] != "2":
                         moves.append(move[i - 1])
                     moves.append(move[i])
+        else:
+            moves = [move]
         return moves
 
 
 test = cube()
 while True:
-    get_input = input('ENTRY MOVE:')
+    get_input = input('ENTRY MOVE(Q: reset):')
     moves = test.get_moves(get_input)
     for single_move in moves:
         test.one_move(single_move)
