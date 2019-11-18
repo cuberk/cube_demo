@@ -1,4 +1,4 @@
-from Rubikscube import cube3
+from RubiksCube import cube3
 import time
 import copy
 
