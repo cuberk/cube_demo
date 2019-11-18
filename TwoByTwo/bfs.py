@@ -1,4 +1,4 @@
-from 二阶 import cube2
+from TwoByTwo import cube2
 import time
 import copy
 
