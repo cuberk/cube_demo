@@ -1,7 +1,3 @@
-import math
-import time
-
-
 class cube:
     def __init__(self):
         self.direction = ['U', 'L', 'F', 'R', 'B', 'D']
